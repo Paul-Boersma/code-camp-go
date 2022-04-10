@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -25,14 +24,13 @@ func main() {
 	// With the go std http package, to access any file or directory within the root folder, provide the root URL: '/folder/somefile.html
 	// With the gorilla mux package, to acces a file or directory provide the full path from the current working directory, regardless of the path requested
 	r.Handle("/", fileServer)
-	// ! Required when using Mux
-	r.HandleFunc("/folder/", handleFolder)
+	// ! Required when using Mux, since gorilla/mux by default does not allow routing to any URL (?)
+	r.HandleFunc("/folder", handleFolder)
 
 	http.ListenAndServe(":8080", r)
 }
 
 func handleFolder(rw http.ResponseWriter, r *http.Request) {
-
 	tmpl := template.Must(template.ParseFiles("./static/folder/index.html"))
 	tmpl.Execute(rw, nil)
 }
